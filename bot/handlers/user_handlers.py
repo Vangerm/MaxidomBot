@@ -1,9 +1,14 @@
 import logging
+
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command, CommandStart, StateFilter
+
+from states.states import PromocodeFillForm, GetDKInfoFillForm
 # from fluentogram import TranslatorRunner
+
+from services.delay_service.publisher import get_dk_info_publisher, get_promocode
 
 
 logger = logging.getLogger(__name__)
@@ -11,83 +16,159 @@ logger = logging.getLogger(__name__)
 user_router = Router()
 
 
+@user_router.message(Command(commands='cancel'), StateFilter(PromocodeFillForm))
+async def process_cancel_command_state(message: Message, state: FSMContext):
+    await message.answer(
+        text='Выберете действие.'
+    )
+    # Сбрасываем состояние и очищаем данные, полученные внутри состояний
+    await state.set_state()
+
+
+@user_router.message(Command(commands='cancel'), StateFilter(GetDKInfoFillForm))
+async def process_cancel_command_state(message: Message, state: FSMContext):
+    await message.answer(
+        text='Выберете действие.'
+    )
+    # Сбрасываем состояние и очищаем данные, полученные внутри состояний
+    await state.set_state()
+
+
+
 @user_router.message(CommandStart())
 async def process_start_command(message: Message, state: FSMContext):
     await state.clear()
     logger.info(f'{message.chat.username} ({message.chat.id}) - start bot')
-    await message.answer(
-        text='Добрый день, меня зовут VK_POSTER!\n\n'
-        'Я помогу вам дублировать новости '
-        'из вашей группы вк в телеграмм группу.\n\n'
-        'Напишите мне /autopost '
-        'для начала настройки автопоста.\n\n'
-        'Триал версия состовляет 1 месяц, '
-        'для просмотра тарифов напишите /tariffs.\n\n'
-        'Перед началом работы узнайте id группы вк '
-        '(убедитесь что она открыта), '
-        'а так же id группы тг.\n'
-        'Можете переслать сообщание из группы тг мне, а'
-        'я подскажу (копировать id группы нужно без минуса!).'
-        )
+    await message.answer(text='Приветствие.')
 
 
 @user_router.message(Command(commands='help'))
 async def process_help_command(message: Message, state: FSMContext):
     await state.clear()
-    await message.answer(
-        text='Напишите мне /autopost '
-        'для начала настройки автопоста.\n\n'
-        'Триал версия состовляет 1 месяц, '
-        'для просмотра тарифов напишите /tariffs.\n\n'
-        'Перед началом работы узнайте id группы вк '
-        '(убедитесь что она открыта), '
-        'а так же id группы тг.\n'
-        'Можете переслать сообщание из группы тг мне, а '
-        'я подскажу (копировать id группы нужно без минуса!).'
-        '\n\nВ дальнейшем наш бот будет развиваться, '
-        'будем рады обратной связи.\n\n'
-        'Напишите мне /feedback и оставте обратную связь.'
-        )
-
-
-@user_router.message(Command(commands='tariffs'))
-async def process_tariffs_command(message: Message, state: FSMContext):
-    await state.clear()
-    await message.answer(
-        text='Мы пока работаем над этим, ожидайте.'
-        )
-
-
-@user_router.message(Command(commands='feedback'))
-async def process_feedback_command(message: Message, state: FSMContext):
-    await state.clear()
-    await message.answer(
-        text='Мы пока работаем над этим, ожидайте.'
-        )
+    await message.answer(text='HELP!')
 
 
 @user_router.message(Command(commands='support'))
 async def process_support_command(message: Message, state: FSMContext):
     await state.clear()
-    await message.answer(
-        text='Мы пока работаем над этим, ожидайте.'
-        )
+    await message.answer(text='SUPPORT!')
 
 
 @user_router.message(Command(commands='info'))
 async def process_info_command(message: Message, state: FSMContext):
     await state.clear()
+    await message.answer(text='INFO!')
+
+
+# Форма для уточнения скидки по карте покупателя
+# --------------------------------------------------------------------
+@user_router.message(Command(commands='dkinfo'))
+async def process_dkinfo_command(message: Message, state: FSMContext):
+    logger.info(f'{message.chat.username} ({message.chat.id}) '
+                '- start fill dkinfo')
+    await message.answer(text='Пожалуйста, введите номер дисконтной карты (без DK)')
+    await state.set_state(GetDKInfoFillForm.fill_dk)
+
+
+@user_router.message(StateFilter(GetDKInfoFillForm.fill_dk),
+                     lambda x: x.text.isdigit() and len(x.text) == 9)
+async def process_dkinfo_dk(message: Message, state: FSMContext):
+    await state.update_data(dk=int(message.text))
     await message.answer(
-        text='Добрый день, меня зовут VK_POSTER!\n\n'
-        'Я помогу вам дублировать новости '
-        'из вашей группы вк в телеграмм группу.\n\n'
-        'Напишите мне /autopost '
-        'для начала настройки автопоста.\n\n'
-        'Триал версия состовляет 1 месяц, '
-        'для просмотра тарифов напишите /tariffs.\n\n'
-        'Перед началом работы узнайте id группы вк '
-        '(убедитесь что она открыта), '
-        'а так же id группы тг.\n'
-        'Можете переслать сообщание из группы тг мне, а'
-        'я подскажу (копировать id группы нужно без минуса!).'
-        )
+        text='Введите Фамилию владельца карты.'
+    )
+    await state.set_state(GetDKInfoFillForm.fill_dk_owner)
+
+
+@user_router.message(StateFilter(GetDKInfoFillForm.fill_dk))
+async def dk_info_wrong_dk(message: Message):
+    await message.answer(
+        text='Номер карты должен состоять из цифр (вводите без DK) длиной 9 символов'
+    )
+
+
+@user_router.message(StateFilter(GetDKInfoFillForm.fill_dk_owner),
+                     lambda x: x.text.isalpha())
+async def process_dk_info_dk_owner(
+                                    message: Message,
+                                    state: FSMContext,
+                                    js,
+                                    subject_get_dk_info):
+    await state.update_data(dk_owner=message.text)
+
+    dk_info = await state.get_data()
+
+    dk, dk_owner = dk_info['dk'], dk_info['dk_owner']
+
+    await get_dk_info_publisher(
+                                js=js,
+                                chat_id=message.chat.id,
+                                dk=dk,
+                                dk_owner=dk_owner,
+                                subject=subject_get_dk_info
+    )
+
+
+@user_router.message(StateFilter(GetDKInfoFillForm.fill_dk_owner))
+async def dk_info_wrong_dk_owner(message: Message):
+    await message.answer(
+        text='Введите корректную фамилию владельца.'
+    )
+# --------------------------------------------------------------------
+
+
+# Форма получения промокода
+# --------------------------------------------------------------------
+@user_router.message(Command(commands='promocode'))
+async def process_promocode_command(message: Message, state: FSMContext):
+    logger.info(f'{message.chat.username} ({message.chat.id}) '
+                '- start fill promocode')
+    await message.answer(text='Пожалуйста, введите номер дисконтной карты (без DK)')
+    await state.set_state(PromocodeFillForm.fill_dk)
+
+
+@user_router.message(StateFilter(PromocodeFillForm.fill_dk),
+                     lambda x: x.text.isdigit() and len(x.text) == 9)
+async def process_promocode_dk(message: Message, state: FSMContext):
+    await state.update_data(dk=int(message.text))
+    await message.answer(
+        text='Введите Фамилию владельца карты.'
+    )
+    await state.set_state(PromocodeFillForm.fill_dk_owner)
+
+
+@user_router.message(StateFilter(PromocodeFillForm.fill_dk))
+async def promocode_wrong_dk(message: Message):
+    await message.answer(
+        text='Номер карты должен состоять из цифр (вводите без DK) длиной 9 символов'
+    )
+
+
+@user_router.message(StateFilter(PromocodeFillForm.fill_dk_owner),
+                     lambda x: x.text.isalpha())
+async def process_promocode_dk_owner(
+                                    message: Message,
+                                    state: FSMContext,
+                                    js,
+                                    subject_get_promocode):
+    await state.update_data(dk_owner=message.text)
+
+    dk_info = await state.get_data()
+
+    dk, dk_owner = dk_info['dk'], dk_info['dk_owner']
+
+    await get_promocode(
+                                js=js,
+                                chat_id=message.chat.id,
+                                dk=dk,
+                                dk_owner=dk_owner,
+                                subject=subject_get_promocode
+    )
+
+
+@user_router.message(StateFilter(PromocodeFillForm.fill_dk_owner))
+async def promocode_wrong_dk_owner(message: Message):
+    await message.answer(
+        text='Введите корректную фамилию владельца.'
+    )
+# --------------------------------------------------------------------

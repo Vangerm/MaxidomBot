@@ -11,6 +11,7 @@ from storage.nats_storage import NatsStorage
 # from middlewares.i18n import TranslatorRunnerMiddleware
 # from utils.i18n import create_translator_hub
 from utils.nats_connect import connect_to_nats
+from utils.start_consumer import start_poll_dk_info, start_poll_promocode, start_poll_promocode_list
 
 
 # Подключаем логирование
@@ -30,18 +31,14 @@ async def main() -> None:
     # Инициализируем хранилище на базе NATS
     storage: NatsStorage = await NatsStorage(nc=nc, js=js).create_storage()
 
-    # Заполняем конфигурационными данными переменные
-    telegram_bot_token = config.tg_bot.token
-
     # Активация телеграмм бота
-    bot: Bot = Bot(token=telegram_bot_token)
+    bot: Bot = Bot(token=config.tg_bot.token)
     dp: Dispatcher = Dispatcher(storage=storage)
 
     # Создаем объект типа TranslatorHub
     # translator_hub: TranslatorHub = create_translator_hub()
 
-    dp['admin_ids'] = config.tg_bot.admin_ids
-
+    # Получаем роутеры
     dp.include_routers(*get_routers())
 
     # Регистрируем миддлварь для i18n
@@ -49,9 +46,17 @@ async def main() -> None:
 
     # Запускаем polling
     try:
-        # await bot.delete_webhook(drop_pending_updates=True)
+        await bot.delete_webhook(drop_pending_updates=True)
         # await dp.start_polling(bot, _translator_hub=translator_hub)
-        await dp.start_polling(bot)
+        # await dp.start_polling(bot)
+        await asyncio.gather(
+            dp.start_polling(
+                bot,
+                js=js,
+                admin_ids=config.tg_bot.admin_ids,
+
+            )
+        )
     except Exception as e:
         logger.exception(e)
     finally:

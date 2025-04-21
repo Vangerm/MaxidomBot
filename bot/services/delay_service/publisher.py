@@ -2,19 +2,51 @@ import json
 
 from nats.js.client import JetStreamContext
 
+# брокеры сообщений - паблишеры
 
-async def vk_post_publisher(
+# получение списка выданных промокодов
+async def get_promocode_list_publisher(
         js: JetStreamContext,
-        tg_group_id: int,
-        vk_group_id: int,
-        vk_token: str,
+        chat_id: int,
         subject: str
 ) -> None:
 
     payload = json.dumps({
-        'tg_group_id': str(tg_group_id),
-        'vk_group_id': str(vk_group_id),
-        'vk_token': vk_token,
+        'chat_id': chat_id
     }).encode()
+
+    await js.publish(subject=subject, payload=payload)
+
+
+# уточнение информации по карте покупателя
+async def get_dk_info_publisher(
+        js: JetStreamContext,
+        chat_id: int,
+        dk: int,
+        dk_owner: str,
+        subject: str
+):
+    payload = json.dumps({
+        'chat_id': chat_id,
+        'dk': dk,
+        'dk_owner': dk_owner
+    })
+
+    await js.publish(subject=subject, payload=payload)
+
+
+# получение промокода покупателем
+async def get_promocode(
+        js: JetStreamContext,
+        chat_id: int,
+        dk: int,
+        dk_owner: str,
+        subject: str
+):
+    payload = json.dumps({
+        'chat_id': chat_id,
+        'dk': dk,
+        'dk_owner': dk_owner
+    })
 
     await js.publish(subject=subject, payload=payload)

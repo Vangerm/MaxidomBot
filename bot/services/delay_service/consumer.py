@@ -15,6 +15,7 @@ from nats.js import JetStreamContext
 logger = logging.getLogger(__name__)
 
 
+# ПЕРЕДЕЛАТЬ!!!!!!
 class VkPostConsumer:
     def __init__(
             self,

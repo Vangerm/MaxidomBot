@@ -14,6 +14,14 @@ class NatsConfig:
 
 
 @dataclass
+class NatsDelayedConsumerConfig:
+    subject_consumer: str
+    subject_publisher: str
+    stream: str
+    durable_name: str
+
+
+@dataclass
 class Config:
     tg_bot: TgBot
     nats: NatsConfig
