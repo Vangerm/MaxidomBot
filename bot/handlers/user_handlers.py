@@ -8,7 +8,7 @@ from aiogram.filters import Command, CommandStart, StateFilter
 from states.states import PromocodeFillForm, GetDKInfoFillForm
 # from fluentogram import TranslatorRunner
 
-from services.delay_service.publisher import get_dk_info_publisher, get_promocode
+from services.delay_service.publisher import get_dk_info_publisher, get_promocode_publisher
 
 
 logger = logging.getLogger(__name__)
@@ -157,7 +157,7 @@ async def process_promocode_dk_owner(
 
     dk, dk_owner = dk_info['dk'], dk_info['dk_owner']
 
-    await get_promocode(
+    await get_promocode_publisher(
                                 js=js,
                                 chat_id=message.chat.id,
                                 dk=dk,

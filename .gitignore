@@ -7,3 +7,5 @@ Dockerfile*
 .env
 
 *.log
+
+nats/data
