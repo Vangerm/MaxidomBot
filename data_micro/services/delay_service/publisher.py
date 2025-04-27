@@ -9,13 +9,13 @@ from nats.js.client import JetStreamContext
 async def push_dk_list_publisher(
         js: JetStreamContext,
         chat_id: int,
-        data: dict,
+        data: list[dict],
         subject: str
 ) -> None:
 
     payload = json.dumps({
         'chat_id': chat_id,
-        'data': dict
+        'data': data
     }).encode()
 
     await js.publish(subject=subject, payload=payload)
@@ -25,7 +25,7 @@ async def push_dk_list_publisher(
 async def push_promocode_list_publisher(
         js: JetStreamContext,
         chat_id: int,
-        data: dict,
+        data: list[dict],
         subject: str
 ) -> None:
 

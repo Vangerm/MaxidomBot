@@ -9,3 +9,5 @@ Dockerfile*
 *.log
 
 nats/data
+
+test*
