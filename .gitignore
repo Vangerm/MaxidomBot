@@ -4,7 +4,7 @@ venv/
 
 Dockerfile*
 
-.env
+*.env
 
 *.log
 
