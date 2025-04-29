@@ -171,6 +171,8 @@ class GetDkInfoConsumer:
                 for row in csv.DictReader(file):
                     if row['last_name'] == payload['dk_owner'] and row['dk'] == payload['dk']:
                         info = row['discount']
+                    else:
+                        info = False
             await push_dk_info_publisher(
                 self.js,
                 payload['chat_id'],
