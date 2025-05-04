@@ -1,7 +1,12 @@
 import logging
 
 from aiogram import Bot
-from services.delay_service.consumer import VkPostConsumer
+from services.delay_service.consumer import (
+    PushDkListConsumer,
+    PushPromocodeListConsumer,
+    PushDKInfoConsumer,
+    PushPromocodeConsumer
+)
 
 from nats.aio.client import Client
 from nats.js.client import JetStreamContext
@@ -18,7 +23,7 @@ async def start_poll_dk_info(
         stream: str,
         durable_name: str
         ) -> None:
-    consumer = VkPostConsumer(
+    consumer = PushDKInfoConsumer(
         nc=nc,
         js=js,
         bot=bot,
@@ -38,7 +43,7 @@ async def start_poll_promocode(
         stream: str,
         durable_name: str
         ) -> None:
-    consumer = VkPostConsumer(
+    consumer = PushPromocodeConsumer(
         nc=nc,
         js=js,
         bot=bot,
@@ -58,7 +63,7 @@ async def start_poll_promocode_list(
         stream: str,
         durable_name: str
         ) -> None:
-    consumer = VkPostConsumer(
+    consumer = PushPromocodeListConsumer(
         nc=nc,
         js=js,
         bot=bot,
@@ -67,4 +72,23 @@ async def start_poll_promocode_list(
         durable_name=durable_name
     )
     logger.info('Start poll promocode list consumer')
+    await consumer.start()
+
+async def start_poll_promocode_list(
+        nc: Client,
+        js: JetStreamContext,
+        bot: Bot,
+        subject_consumer: str,
+        stream: str,
+        durable_name: str
+        ) -> None:
+    consumer = PushDkListConsumer(
+        nc=nc,
+        js=js,
+        bot=bot,
+        subject_consumer=subject_consumer,
+        stream=stream,
+        durable_name=durable_name
+    )
+    logger.info('Start poll dk list consumer')
     await consumer.start()

@@ -8,9 +8,17 @@ class NatsConfig:
 
 
 @dataclass
-class NatsDelayedConsumerConfig:
-    subject_consumer: str
-    subject_publisher: str
+class NatsStreamConfig:
+    subject_admin_dk_publisher: str
+    subject_admin_promocode_publisher: str
+    subject_user_dk_publisher: str
+    subject_user_promocode_publisher: str
+
+    subject_admin_dk_consumer: str
+    subject_admin_promocode_consumer: str
+    subject_user_dk_consumer: str
+    subject_user_promocode_consumer: str
+
     stream: str
     durable_name: str
 
@@ -18,7 +26,7 @@ class NatsDelayedConsumerConfig:
 @dataclass
 class Config:
     nats: NatsConfig
-    delayed_consumer: NatsDelayedConsumerConfig
+    delayed_consumer: NatsStreamConfig
 
 
 def load_config(path: str | None = None) -> Config:
@@ -30,10 +38,16 @@ def load_config(path: str | None = None) -> Config:
         nats=NatsConfig(
             servers=env.list('NATS_SERVERS')
         ),
-        delayed_consumer=NatsDelayedConsumerConfig(
-            subject_consumer=env('NATS_POLL_CONSUMER_SUBJECT'),
-            subject_publisher=env('NATS_POST_PUBLISHER_SUBJECT'),
-            stream=env('NATS_CONSUMER_STREAM'),
-            durable_name=env('NATS_CONSUMER_DURABLE_NAME')
+        stream_config=NatsStreamConfig(
+            subject_admin_dk_publisher=env('NATS_ADMIN_DK_PUBLISHER'),
+            subject_admin_promocode_publisher=env('NATS_ADMIN_PROMOCODE_PUBLISHER'),
+            subject_user_dk_publisher=env('NATS_USER_DK_PUBLISHER'),
+            subject_user_promocode_publisher=env('NATS_USER_PROMOCODE_PUBLISHER'),
+            subject_admin_dk_consumer=env('NATS_ADMIN_DK_CONSUMER'),
+            subject_admin_promocode_consumer=env('NATS_ADMIN_PROMOCODE_CONSUMER'),
+            subject_user_dk_consumer=env('NATS_USER_DK_CONSUMER'),
+            subject_user_promocode_consumer=env('NATS_USER_PROMOCODE_CONSUMER'),
+            stream=env('NATS_STREAM_CONSUMER'),
+            durable_name=env('NATS_DURABLE_NAME')
         )
     )

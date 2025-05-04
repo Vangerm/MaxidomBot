@@ -4,9 +4,6 @@ from contextlib import suppress
 
 from aiogram import Bot
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import (
-                            URLInputFile,
-                            InputMediaPhoto)
 
 from nats.aio.client import Client
 from nats.aio.msg import Msg
