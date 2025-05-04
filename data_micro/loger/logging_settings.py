@@ -10,7 +10,7 @@ logging_config = {
     'handlers': {
         'default': {
             'class': 'logging.FileHandler',
-            'filename': 'loger/logs.log',
+            'filename': 'data_micro/loger/logs.log',
             'mode': 'w',
             'level': 'INFO',
             'formatter': 'default',

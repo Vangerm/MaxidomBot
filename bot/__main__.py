@@ -4,14 +4,14 @@ import logging.config
 from aiogram import Bot, Dispatcher
 # from fluentogram import TranslatorHub
 
-from loger.logging_settings import logging_config
-from config_data.config import load_config
-from handlers import get_routers
-from storage.nats_storage import NatsStorage
+from bot.loger.logging_settings import logging_config
+from bot.config_data.config import load_config
+from bot.handlers import get_routers
+from bot.storage.nats_storage import NatsStorage
 # from middlewares.i18n import TranslatorRunnerMiddleware
 # from utils.i18n import create_translator_hub
-from utils.nats_connect import connect_to_nats
-from utils.start_consumer import (
+from bot.utils.nats_connect import connect_to_nats
+from bot.utils.start_consumer import (
     start_poll_dk_info,
     start_poll_promocode,
     start_poll_dk_list,

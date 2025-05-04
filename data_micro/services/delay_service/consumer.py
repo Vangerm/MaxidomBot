@@ -3,7 +3,7 @@ import logging
 import csv
 import random
 
-from services.delay_service.publisher import (
+from data_micro.services.delay_service.publisher import (
     push_dk_list_publisher,
     push_promocode_list_publisher,
     push_dk_info_publisher,

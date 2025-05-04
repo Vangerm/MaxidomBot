@@ -5,10 +5,10 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command, CommandStart, StateFilter
 
-from states.states import PromocodeFillForm, GetDKInfoFillForm
+from bot.states.states import PromocodeFillForm, GetDKInfoFillForm
 # from fluentogram import TranslatorRunner
 
-from services.delay_service.publisher import (
+from bot.services.delay_service.publisher import (
     get_dk_info_publisher,
     get_promocode_publisher)
 

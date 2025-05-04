@@ -3,9 +3,9 @@ from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 # from fluentogram import TranslatorRunner
-from services.delay_service.publisher import get_promocode_list_publisher
+from bot.services.delay_service.publisher import get_promocode_list_publisher
 
-from filters.filters import IsAdmin
+from bot.filters.filters import IsAdmin
 
 
 admin_router = Router()

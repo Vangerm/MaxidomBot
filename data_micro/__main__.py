@@ -1,10 +1,10 @@
 import asyncio
 import logging.config
 
-from loger.logging_settings import logging_config
-from config_data.config import load_config
-from utils.nats_connect import connect_to_nats
-from utils.start_consumer import (
+from data_micro.loger.logging_settings import logging_config
+from data_micro.config_data.config import load_config
+from data_micro.utils.nats_connect import connect_to_nats
+from data_micro.utils.start_consumer import (
     start_poll_dk_info,
     start_poll_promocode,
     start_poll_dk_list,
@@ -33,32 +33,32 @@ async def main() -> None:
             start_poll_dk_list(
                 nc=nc,
                 js=js,
-                subject_consumer=config.stream_config.subject_consumer_dk_list,
-                subject_publisher=config.stream_config.subject_publisher_dk_list,
+                subject_consumer=config.stream_config.subject_admin_dk_consumer,
+                subject_publisher=config.stream_config.subject_admin_dk_publisher,
                 stream=stream,
                 durable_name=durable_name
             ),
             start_poll_dk_info(
                 nc=nc,
                 js=js,
-                subject_consumer=config.stream_config.subject_consumer_dk_info,
-                subject_publisher=config.stream_config.subject_publisher_dk_info,
+                subject_consumer=config.stream_config.subject_user_dk_consumer,
+                subject_publisher=config.stream_config.subject_user_dk_publisher,
                 stream=stream,
                 durable_name=durable_name
             ),
             start_poll_promocode(
                 nc=nc,
                 js=js,
-                subject_consumer=config.stream_config.subject_consumer_promocode,
-                subject_publisher=config.stream_config.subject_publisher_promocode,
+                subject_consumer=config.stream_config.subject_user_promocode_consumer,
+                subject_publisher=config.stream_config.subject_user_promocode_publisher,
                 stream=stream,
                 durable_name=durable_name
             ),
             start_poll_promocode_list(
                 nc=nc,
                 js=js,
-                subject_consumer=config.stream_config.subject_consumer_promocode_list,
-                subject_publisher=config.stream_config.subject_publisher_promocode_list,
+                subject_consumer=config.stream_config.subject_admin_promocode_consumer,
+                subject_publisher=config.stream_config.subject_admin_promocode_publisher,
                 stream=stream,
                 durable_name=durable_name
             )

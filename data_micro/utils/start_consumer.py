@@ -1,6 +1,6 @@
 import logging
 
-from services.delay_service.consumer import (
+from data_micro.services.delay_service.consumer import (
     GetDkListConsumer,
     GetPromocodeListConsumer,
     GetDkInfoConsumer,

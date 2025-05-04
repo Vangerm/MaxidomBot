@@ -44,7 +44,7 @@ async def get_dk_info_publisher(
         'chat_id': chat_id,
         'dk': dk,
         'dk_owner': dk_owner
-    })
+    }).encode()
 
     await js.publish(subject=subject, payload=payload)
 
@@ -61,6 +61,6 @@ async def get_promocode_publisher(
         'chat_id': chat_id,
         'dk': dk,
         'dk_owner': dk_owner
-    })
+    }).encode()
 
     await js.publish(subject=subject, payload=payload)

@@ -26,7 +26,7 @@ class NatsStreamConfig:
 @dataclass
 class Config:
     nats: NatsConfig
-    delayed_consumer: NatsStreamConfig
+    stream_config: NatsStreamConfig
 
 
 def load_config(path: str | None = None) -> Config:

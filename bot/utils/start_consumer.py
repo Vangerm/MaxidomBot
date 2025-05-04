@@ -1,7 +1,7 @@
 import logging
 
 from aiogram import Bot
-from services.delay_service.consumer import (
+from bot.services.delay_service.consumer import (
     PushDkListConsumer,
     PushPromocodeListConsumer,
     PushDKInfoConsumer,
