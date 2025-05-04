@@ -11,7 +11,11 @@ from storage.nats_storage import NatsStorage
 # from middlewares.i18n import TranslatorRunnerMiddleware
 # from utils.i18n import create_translator_hub
 from utils.nats_connect import connect_to_nats
-from utils.start_consumer import start_poll_dk_info, start_poll_promocode, start_poll_promocode_list
+from utils.start_consumer import (
+    start_poll_dk_info,
+    start_poll_promocode,
+    start_poll_dk_list,
+    start_poll_promocode_list)
 
 
 # Подключаем логирование
@@ -41,6 +45,10 @@ async def main() -> None:
     # Получаем роутеры
     dp.include_routers(*get_routers())
 
+    # Инициализируем стрим
+    stream = config.stream_config.stream
+    durable_name = config.stream_config.durable_name
+
     # Регистрируем миддлварь для i18n
     # dp.update.middleware(TranslatorRunnerMiddleware())
 
@@ -54,9 +62,46 @@ async def main() -> None:
                 bot,
                 js=js,
                 admin_ids=config.tg_bot.admin_ids,
-
+                subject_admin_dk_publisher=config.stream_config.subject_admin_dk_publisher,
+                subject_admin_promocode_publisher=config.stream_config.subject_admin_promocode_publisher,
+                subject_user_dk_publisher=config.stream_config.subject_user_dk_publisher,
+                subject_user_promocode_publisher=config.stream_config.subject_user_promocode_publisher
+            ),
+            start_poll_dk_info(
+                nc=nc,
+                js=js,
+                bot=bot,
+                subject_consumer=config.stream_config.subject_user_dk_consumer,
+                stream=stream,
+                durable_name=durable_name
+            ),
+            start_poll_promocode(
+                nc=nc,
+                js=js,
+                bot=bot,
+                subject_consumer=config.stream_config.subject_user_promocode_consumer,
+                stream=stream,
+                durable_name=durable_name
+            ),
+            start_poll_dk_list(
+                nc=nc,
+                js=js,
+                bot=bot,
+                subject_consumer=config.stream_config.subject_admin_dk_consumer,
+                stream=stream,
+                durable_name=durable_name
+            ),
+            start_poll_promocode_list(
+                nc=nc,
+                js=js,
+                bot=bot,
+                subject_consumer=config.stream_config.subject_admin_promocode_consumer,
+                stream=stream,
+                durable_name=durable_name
             )
         )
+    except KeyboardInterrupt:
+        logger.info('Stop bot')
     except Exception as e:
         logger.exception(e)
     finally:

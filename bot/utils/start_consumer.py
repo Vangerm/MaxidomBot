@@ -74,7 +74,7 @@ async def start_poll_promocode_list(
     logger.info('Start poll promocode list consumer')
     await consumer.start()
 
-async def start_poll_promocode_list(
+async def start_poll_dk_list(
         nc: Client,
         js: JetStreamContext,
         bot: Bot,

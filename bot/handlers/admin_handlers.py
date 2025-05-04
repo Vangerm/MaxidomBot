@@ -17,17 +17,30 @@ async def admin_get_log_command(message: Message, state: FSMContext):
     await message.answer_document(FSInputFile('loger/logs.log'))
 
 
-@admin_router.message(Command(commands='getlist'), IsAdmin())
+@admin_router.message(Command(commands='getpromocodelist'), IsAdmin())
 async def admin_get_promocode_list(
                                     message: Message,
                                     state: FSMContext,
                                     js,
-                                    subject_get_promocode_publisher):
+                                    subject_admin_promocode_publisher):
     await state.clear()
     await get_promocode_list_publisher(
                                         js=js,
                                         chat_id=message.chat.id,
-                                        subject=subject_get_promocode_publisher
+                                        subject=subject_admin_promocode_publisher
+    )
+
+@admin_router.message(Command(commands='getdklist'), IsAdmin())
+async def admin_get_promocode_list(
+                                    message: Message,
+                                    state: FSMContext,
+                                    js,
+                                    subject_admin_dk_publisher):
+    await state.clear()
+    await get_promocode_list_publisher(
+                                        js=js,
+                                        chat_id=message.chat.id,
+                                        subject=subject_admin_dk_publisher
     )
 
 

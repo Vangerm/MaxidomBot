@@ -1,6 +1,5 @@
 import logging
 
-from aiogram import Bot
 from services.delay_service.consumer import (
     GetDkListConsumer,
     GetPromocodeListConsumer,
