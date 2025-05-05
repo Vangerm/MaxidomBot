@@ -3,8 +3,6 @@ venv/
 .vs*
 nui/
 
-Dockerfile*
-
 *.env
 
 *.log
