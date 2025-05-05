@@ -30,6 +30,6 @@ logging_config = {
     'root': {
         'formatter': 'default',
         'handlers': ['default'],
-        'level': 'INFO'
+        'level': 'DEBUG'
     }
 }
