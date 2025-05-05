@@ -32,7 +32,7 @@ jobs:
           push: true
           # С каким тегом будет загружен образ
           # Переменные тоже поддерживаются
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/MaxidomBot:v0.1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/maxidombot:v0.1
       -
         name: Build and push
         uses: docker/build-push-action@v6
