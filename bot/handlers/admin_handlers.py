@@ -14,7 +14,7 @@ admin_router = Router()
 @admin_router.message(Command(commands='getlog'), IsAdmin())
 async def admin_get_log_command(message: Message, state: FSMContext):
     await state.clear()
-    await message.answer_document(FSInputFile('loger/logs.log'))
+    await message.answer_document(FSInputFile('bot/loger/logs.log'))
 
 
 @admin_router.message(Command(commands='getpromocodelist'), IsAdmin())

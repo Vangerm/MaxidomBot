@@ -50,6 +50,7 @@ class GetDkListConsumer:
 
     # получение данных из бд
     async def get_dk_list(self, msg: Msg) -> None:
+        logger.debug('DK_LIST')
         payload = json.loads(msg.data)
         await msg.ack()
 
@@ -105,6 +106,7 @@ class GetPromocodeListConsumer:
 
     # получение данных из бд
     async def get_promocode_list(self, msg: Msg) -> None:
+        logger.debug('PROMOCODE_LIST')
         payload = json.loads(msg.data)
         await msg.ack()
 
@@ -163,6 +165,7 @@ class GetDkInfoConsumer:
 
     # получение данных из бд
     async def get_dk_info(self, msg: Msg) -> None:
+        logger.debug('DK_INFO')
         payload = json.loads(msg.data)
         await msg.ack()
 
@@ -235,6 +238,7 @@ class GetPromocodeConsumer:
 
     # получение данных из бд
     async def get_promocode(self, msg: Msg) -> None:
+        logger.debug('PROMOCODE')
         payload = json.loads(msg.data)
         await msg.ack()
 

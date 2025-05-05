@@ -22,6 +22,7 @@ async def start_poll_dk_list(
         stream: str,
         durable_name: str
         ) -> None:
+    logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetDkListConsumer(
         nc=nc,
         js=js,
@@ -42,6 +43,7 @@ async def start_poll_dk_info(
         stream: str,
         durable_name: str
         ) -> None:
+    logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetDkInfoConsumer(
         nc=nc,
         js=js,
@@ -62,6 +64,7 @@ async def start_poll_promocode(
         stream: str,
         durable_name: str
         ) -> None:
+    logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetPromocodeConsumer(
         nc=nc,
         js=js,
@@ -82,6 +85,7 @@ async def start_poll_promocode_list(
         stream: str,
         durable_name: str
         ) -> None:
+    logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetPromocodeListConsumer(
         nc=nc,
         js=js,

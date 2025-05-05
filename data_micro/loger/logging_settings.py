@@ -12,24 +12,24 @@ logging_config = {
             'class': 'logging.FileHandler',
             'filename': 'data_micro/loger/logs.log',
             'mode': 'w',
-            'level': 'INFO',
+            'level': 'DEBUG',
             'formatter': 'default',
             'encoding': 'utf-8'
         }
     },
-    'loggers': {
-        'user_handlers': {
-            'level': 'INFO',
-            'handlers': ['default']
-        },
-        'other_handlers': {
-            'level': 'INFO',
-            'handlers': ['default']
-        }
-    },
+    # 'loggers': {
+    #     'user_handlers': {
+    #         'level': 'DEBUG',
+    #         'handlers': ['default']
+    #     },
+    #     'other_handlers': {
+    #         'level': 'INFO',
+    #         'handlers': ['default']
+    #     }
+    # },
     'root': {
         'formatter': 'default',
         'handlers': ['default'],
-        'level': 'INFO'
+        'level': 'DEBUG'
     }
 }
