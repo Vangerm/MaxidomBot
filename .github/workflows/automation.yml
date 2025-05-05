@@ -28,7 +28,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: ./Dockerfile.bot
+          file: ./dockerfile.bot
           push: true
           # С каким тегом будет загружен образ
           # Переменные тоже поддерживаются
@@ -37,7 +37,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: ./Dockerfile.data_micro
+          file: ./dockerfile.data_micro
           push: true
           # С каким тегом будет загружен образ
           # Переменные тоже поддерживаются
