@@ -19,22 +19,19 @@ class PushDkListConsumer:
             js: JetStreamContext,
             bot: Bot,
             subject_consumer: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.bot = bot
         self.subject_consumer = subject_consumer
         self.stream = stream
-        self.durable_name = durable_name
 
     async def start(self) -> None:
         self.stream_sub = await self.js.subscribe(
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.push_dk_list,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -67,22 +64,19 @@ class PushPromocodeListConsumer:
             js: JetStreamContext,
             bot: Bot,
             subject_consumer: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.bot = bot
         self.subject_consumer = subject_consumer
         self.stream = stream
-        self.durable_name = durable_name
 
     async def start(self) -> None:
         self.stream_sub = await self.js.subscribe(
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.push_promocode_list,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -114,22 +108,19 @@ class PushDKInfoConsumer:
             js: JetStreamContext,
             bot: Bot,
             subject_consumer: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.bot = bot
         self.subject_consumer = subject_consumer
         self.stream = stream
-        self.durable_name = durable_name
 
     async def start(self) -> None:
         self.stream_sub = await self.js.subscribe(
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.push_dk_info,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -143,10 +134,7 @@ class PushDKInfoConsumer:
         info = payload['info']
 
         # отправка сообщений в телеграм
-        if info:
-            text = f'{dk_owner} - {dk} - {info}'
-        else:
-            text = f'{dk_owner} - {dk} - Данные не верны'
+        text = f'{dk_owner} - {dk} - {info}'
 
         with suppress(TelegramBadRequest):
             await self.bot.send_message(
@@ -166,22 +154,19 @@ class PushPromocodeConsumer:
             js: JetStreamContext,
             bot: Bot,
             subject_consumer: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.bot = bot
         self.subject_consumer = subject_consumer
         self.stream = stream
-        self.durable_name = durable_name
 
     async def start(self) -> None:
         self.stream_sub = await self.js.subscribe(
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.push_promocode,
-            durable=self.durable_name,
             manual_ack=True
         )
 

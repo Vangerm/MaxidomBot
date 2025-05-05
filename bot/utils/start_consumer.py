@@ -20,16 +20,14 @@ async def start_poll_dk_info(
         js: JetStreamContext,
         bot: Bot,
         subject_consumer: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     consumer = PushDKInfoConsumer(
         nc=nc,
         js=js,
         bot=bot,
         subject_consumer=subject_consumer,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll dk info consumer')
     await consumer.start()
@@ -40,16 +38,14 @@ async def start_poll_promocode(
         js: JetStreamContext,
         bot: Bot,
         subject_consumer: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     consumer = PushPromocodeConsumer(
         nc=nc,
         js=js,
         bot=bot,
         subject_consumer=subject_consumer,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll promocode consumer')
     await consumer.start()
@@ -60,16 +56,14 @@ async def start_poll_promocode_list(
         js: JetStreamContext,
         bot: Bot,
         subject_consumer: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     consumer = PushPromocodeListConsumer(
         nc=nc,
         js=js,
         bot=bot,
         subject_consumer=subject_consumer,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll promocode list consumer')
     await consumer.start()
@@ -79,16 +73,14 @@ async def start_poll_dk_list(
         js: JetStreamContext,
         bot: Bot,
         subject_consumer: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     consumer = PushDkListConsumer(
         nc=nc,
         js=js,
         bot=bot,
         subject_consumer=subject_consumer,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll dk list consumer')
     await consumer.start()

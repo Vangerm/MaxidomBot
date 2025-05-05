@@ -47,7 +47,6 @@ async def main() -> None:
 
     # Инициализируем стрим
     stream = config.stream_config.stream
-    durable_name = config.stream_config.durable_name
 
     # Регистрируем миддлварь для i18n
     # dp.update.middleware(TranslatorRunnerMiddleware())
@@ -72,32 +71,28 @@ async def main() -> None:
                 js=js,
                 bot=bot,
                 subject_consumer=config.stream_config.subject_user_dk_consumer,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             ),
             start_poll_promocode(
                 nc=nc,
                 js=js,
                 bot=bot,
                 subject_consumer=config.stream_config.subject_user_promocode_consumer,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             ),
             start_poll_dk_list(
                 nc=nc,
                 js=js,
                 bot=bot,
                 subject_consumer=config.stream_config.subject_admin_dk_consumer,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             ),
             start_poll_promocode_list(
                 nc=nc,
                 js=js,
                 bot=bot,
                 subject_consumer=config.stream_config.subject_admin_promocode_consumer,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             )
         )
     except KeyboardInterrupt:

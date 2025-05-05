@@ -26,15 +26,13 @@ class GetDkListConsumer:
             js: JetStreamContext,
             subject_consumer: str,
             subject_publisher: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.subject_consumer = subject_consumer
         self.subject_publisher = subject_publisher
         self.stream = stream
-        self.durable_name = durable_name
 
     # консьюмер ловящий данные
     async def start(self) -> None:
@@ -44,7 +42,6 @@ class GetDkListConsumer:
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.get_dk_list,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -55,7 +52,7 @@ class GetDkListConsumer:
         await msg.ack()
 
         try:
-            with open('data_dk.csv', newline='', encoding='utf-8') as file:
+            with open('data_micro/data_dk.csv', newline='', encoding='utf-8') as file:
                 data = list(csv.DictReader(file))
             await push_dk_list_publisher(
                 self.js,
@@ -82,15 +79,13 @@ class GetPromocodeListConsumer:
             js: JetStreamContext,
             subject_consumer: str,
             subject_publisher: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.subject_consumer = subject_consumer
         self.subject_publisher = subject_publisher
         self.stream = stream
-        self.durable_name = durable_name
 
     # консьюмер ловящий данные
     async def start(self) -> None:
@@ -100,7 +95,6 @@ class GetPromocodeListConsumer:
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.get_promocode_list,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -111,7 +105,7 @@ class GetPromocodeListConsumer:
         await msg.ack()
 
         try:
-            with open('data_dk.csv', newline='', encoding='utf-8') as file:
+            with open('data_micro/data_dk.csv', newline='', encoding='utf-8') as file:
                 data = list()
                 for row in csv.DictReader(file):
                     if row['promocode'] != '':
@@ -141,15 +135,13 @@ class GetDkInfoConsumer:
             js: JetStreamContext,
             subject_consumer: str,
             subject_publisher: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.subject_consumer = subject_consumer
         self.subject_publisher = subject_publisher
         self.stream = stream
-        self.durable_name = durable_name
 
     # консьюмер ловящий данные
     async def start(self) -> None:
@@ -159,7 +151,6 @@ class GetDkInfoConsumer:
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.get_dk_info,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -170,12 +161,17 @@ class GetDkInfoConsumer:
         await msg.ack()
 
         try:
-            with open('data_dk.csv', newline='', encoding='utf-8') as file:
+            with open('data_micro/data_dk.csv', newline='', encoding='utf-8') as file:
                 for row in csv.DictReader(file):
-                    if row['last_name'] == payload['dk_owner'] and row['dk'] == payload['dk']:
+                    logger.debug(f'row: {row}')
+                    logger.debug(f'payload: {payload}')
+                    if row['last_name'] == payload['dk_owner'] and row['dk'] == str(payload['dk']):
                         info = row['discount']
+                        break
                     else:
                         info = False
+            if not info:
+                info = 'Даннные не найдены.'
             await push_dk_info_publisher(
                 self.js,
                 payload['chat_id'],
@@ -203,15 +199,13 @@ class GetPromocodeConsumer:
             js: JetStreamContext,
             subject_consumer: str,
             subject_publisher: str,
-            stream: str,
-            durable_name: str
+            stream: str
     ) -> None:
         self.nc = nc
         self.js = js
         self.subject_consumer = subject_consumer
         self.subject_publisher = subject_publisher
         self.stream = stream
-        self.durable_name = durable_name
 
         self.promocodes = ['8qqLp7BH',
                         'uodK3MGq',
@@ -232,7 +226,6 @@ class GetPromocodeConsumer:
             subject=self.subject_consumer,
             stream=self.stream,
             cb=self.get_promocode,
-            durable=self.durable_name,
             manual_ack=True
         )
 
@@ -243,14 +236,15 @@ class GetPromocodeConsumer:
         await msg.ack()
 
         try:
-            with open('data_dk.csv', newline='', encoding='utf-8') as file:
+            with open('data_micro/data_dk.csv', newline='', encoding='utf-8') as file:
                 data = list(csv.DictReader(file))
             for id, row in enumerate(data):
-                if row['last_name'] == payload['dk_owner'] and row['dk'] == payload['dk']:
+                if row['last_name'] == payload['dk_owner'] and row['dk'] == str(payload['dk']):
                     if row['promocode'] == '':
                         promocode = random.choice(self.promocodes)
+                        logger.debug(f'promocode: {promocode}')
                         data[id]['promocode'] = promocode
-                        self.write_promocode(data)
+                        await self.write_promocode(data)
                     else:
                         promocode = row['promocode']
 
@@ -266,7 +260,8 @@ class GetPromocodeConsumer:
             logger.exception(e)
 
     async def write_promocode(self, data):
-        with open('data_dk.csv', 'w', newline='', encoding='utf-8') as file:
+        logger.debug('write_promocode')
+        with open('data_micro/data_dk.csv', 'w', newline='', encoding='utf-8') as file:
             fieldnames = ['last_name', 'dk', 'discount', 'promocode']
             writer = csv.DictWriter(file, fieldnames=fieldnames)
 

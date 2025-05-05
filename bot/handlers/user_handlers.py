@@ -109,6 +109,7 @@ async def process_dk_info_dk_owner(
                                 dk_owner=dk_owner,
                                 subject=subject_user_dk_publisher
     )
+    await state.set_state()
 
 
 @user_router.message(StateFilter(GetDKInfoFillForm.fill_dk_owner))
@@ -166,6 +167,7 @@ async def process_promocode_dk_owner(
                                 dk_owner=dk_owner,
                                 subject=subject_user_promocode_publisher
     )
+    await state.set_state()
 
 
 @user_router.message(StateFilter(PromocodeFillForm.fill_dk_owner))

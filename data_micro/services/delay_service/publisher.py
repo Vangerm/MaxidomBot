@@ -51,7 +51,7 @@ async def push_dk_info_publisher(
         'dk': dk,
         'dk_owner': dk_owner,
         'info': info
-    })
+    }).encode()
 
     await js.publish(subject=subject, payload=payload)
 
@@ -66,6 +66,6 @@ async def push_promocode_publisher(
     payload = json.dumps({
         'chat_id': chat_id,
         'promocode': promocode
-    })
+    }).encode()
 
     await js.publish(subject=subject, payload=payload)

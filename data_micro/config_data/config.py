@@ -20,7 +20,6 @@ class NatsStreamConfig:
     subject_user_promocode_consumer: str
 
     stream: str
-    durable_name: str
 
 
 @dataclass
@@ -47,7 +46,6 @@ def load_config(path: str | None = None) -> Config:
             subject_admin_promocode_consumer=env('NATS_ADMIN_PROMOCODE_CONSUMER'),
             subject_user_dk_consumer=env('NATS_USER_DK_CONSUMER'),
             subject_user_promocode_consumer=env('NATS_USER_PROMOCODE_CONSUMER'),
-            stream=env('NATS_STREAM_CONSUMER'),
-            durable_name=env('NATS_DURABLE_NAME')
+            stream=env('NATS_STREAM_CONSUMER')
         )
     )

@@ -23,7 +23,6 @@ async def main() -> None:
     config = load_config()
 
     stream = config.stream_config.stream
-    durable_name = config.stream_config.durable_name
 
     # Подключаемся к NATS
     nc, js = await connect_to_nats(servers=config.nats.servers)
@@ -35,32 +34,28 @@ async def main() -> None:
                 js=js,
                 subject_consumer=config.stream_config.subject_admin_dk_consumer,
                 subject_publisher=config.stream_config.subject_admin_dk_publisher,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             ),
             start_poll_dk_info(
                 nc=nc,
                 js=js,
                 subject_consumer=config.stream_config.subject_user_dk_consumer,
                 subject_publisher=config.stream_config.subject_user_dk_publisher,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             ),
             start_poll_promocode(
                 nc=nc,
                 js=js,
                 subject_consumer=config.stream_config.subject_user_promocode_consumer,
                 subject_publisher=config.stream_config.subject_user_promocode_publisher,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             ),
             start_poll_promocode_list(
                 nc=nc,
                 js=js,
                 subject_consumer=config.stream_config.subject_admin_promocode_consumer,
                 subject_publisher=config.stream_config.subject_admin_promocode_publisher,
-                stream=stream,
-                durable_name=durable_name
+                stream=stream
             )
         )
         while True:

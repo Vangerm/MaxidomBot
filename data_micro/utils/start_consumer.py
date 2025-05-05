@@ -19,8 +19,7 @@ async def start_poll_dk_list(
         js: JetStreamContext,
         subject_consumer: str,
         subject_publisher: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetDkListConsumer(
@@ -28,8 +27,7 @@ async def start_poll_dk_list(
         js=js,
         subject_consumer=subject_consumer,
         subject_publisher=subject_publisher,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll dk info consumer')
     await consumer.start()
@@ -40,8 +38,7 @@ async def start_poll_dk_info(
         js: JetStreamContext,
         subject_consumer: str,
         subject_publisher: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetDkInfoConsumer(
@@ -49,8 +46,7 @@ async def start_poll_dk_info(
         js=js,
         subject_consumer=subject_consumer,
         subject_publisher=subject_publisher,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll dk info consumer')
     await consumer.start()
@@ -61,8 +57,7 @@ async def start_poll_promocode(
         js: JetStreamContext,
         subject_consumer: str,
         subject_publisher: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetPromocodeConsumer(
@@ -70,8 +65,7 @@ async def start_poll_promocode(
         js=js,
         subject_consumer=subject_consumer,
         subject_publisher=subject_publisher,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll promocode consumer')
     await consumer.start()
@@ -82,8 +76,7 @@ async def start_poll_promocode_list(
         js: JetStreamContext,
         subject_consumer: str,
         subject_publisher: str,
-        stream: str,
-        durable_name: str
+        stream: str
         ) -> None:
     logger.debug(f'subject: {subject_consumer}, stream: {stream}')
     consumer = GetPromocodeListConsumer(
@@ -91,8 +84,7 @@ async def start_poll_promocode_list(
         js=js,
         subject_consumer=subject_consumer,
         subject_publisher=subject_publisher,
-        stream=stream,
-        durable_name=durable_name
+        stream=stream
     )
     logger.info('Start poll promocode list consumer')
     await consumer.start()
