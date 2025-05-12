@@ -12,10 +12,12 @@ from bot.storage.nats_storage import NatsStorage
 # from utils.i18n import create_translator_hub
 from bot.utils.nats_connect import connect_to_nats
 from bot.utils.start_consumer import (
+    start_poll_user_active,
     start_poll_dk_info,
     start_poll_promocode,
     start_poll_dk_list,
     start_poll_promocode_list)
+from bot.utils.stream_create import create_stream
 
 
 # Подключаем логирование
@@ -32,6 +34,11 @@ async def main() -> None:
     # Подключаемся к NATS
     nc, js = await connect_to_nats(servers=config.nats.servers)
 
+    # Инициализируем стрим
+    stream = config.stream_config.stream
+    # Создаем стрим в NATS
+    await create_stream(js=js, stream=stream)
+
     # Инициализируем хранилище на базе NATS
     storage: NatsStorage = await NatsStorage(nc=nc, js=js).create_storage()
 
@@ -44,9 +51,6 @@ async def main() -> None:
 
     # Получаем роутеры
     dp.include_routers(*get_routers())
-
-    # Инициализируем стрим
-    stream = config.stream_config.stream
 
     # Регистрируем миддлварь для i18n
     # dp.update.middleware(TranslatorRunnerMiddleware())
@@ -64,7 +68,16 @@ async def main() -> None:
                 subject_admin_dk_publisher=config.stream_config.subject_admin_dk_publisher,
                 subject_admin_promocode_publisher=config.stream_config.subject_admin_promocode_publisher,
                 subject_user_dk_publisher=config.stream_config.subject_user_dk_publisher,
-                subject_user_promocode_publisher=config.stream_config.subject_user_promocode_publisher
+                subject_user_promocode_publisher=config.stream_config.subject_user_promocode_publisher,
+                subject_user_active_publisher=config.stream_config.subject_do_active_user_publisher,
+                subject_user_inactive_publisher=config.stream_config.subject_do_inactive_user_publisher
+            ),
+            start_poll_user_active(
+                nc=nc,
+                js=js,
+                bot=bot,
+                subject_consumer=config.stream_config.subject_add_user_success_consumer,
+                stream=stream
             ),
             start_poll_dk_info(
                 nc=nc,

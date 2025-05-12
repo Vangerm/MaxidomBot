@@ -5,6 +5,8 @@ from data_micro.loger.logging_settings import logging_config
 from data_micro.config_data.config import load_config
 from data_micro.utils.nats_connect import connect_to_nats
 from data_micro.utils.start_consumer import (
+    start_poll_user_active,
+    start_poll_user_inactive,
     start_poll_dk_info,
     start_poll_promocode,
     start_poll_dk_list,
@@ -29,6 +31,19 @@ async def main() -> None:
 
     try:
         await asyncio.gather(
+            start_poll_user_active(
+                nc=nc,
+                js=js,
+                subject_consumer=config.stream_config.subject_user_do_active_consumer,
+                subject_publisher=config.stream_config.subject_add_user_success_publisher,
+                stream=stream
+            ),
+            start_poll_user_inactive(
+                nc=nc,
+                js=js,
+                subject_consumer=config.stream_config.subject_user_do_inactive_consumer,
+                stream=stream
+            ),
             start_poll_dk_list(
                 nc=nc,
                 js=js,

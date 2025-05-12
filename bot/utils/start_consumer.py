@@ -2,6 +2,7 @@ import logging
 
 from aiogram import Bot
 from bot.services.delay_service.consumer import (
+    SuccessAddConsumer,
     PushDkListConsumer,
     PushPromocodeListConsumer,
     PushDKInfoConsumer,
@@ -13,6 +14,24 @@ from nats.js.client import JetStreamContext
 
 
 logger = logging.getLogger(__name__)
+
+
+async def start_poll_user_active(
+        nc: Client,
+        js: JetStreamContext,
+        bot: Bot,
+        subject_consumer: str,
+        stream: str
+        ) -> None:
+    logger.info('Start poll user active consumer')
+    consumer = SuccessAddConsumer(
+        nc=nc,
+        js=js,
+        bot=bot,
+        subject_consumer=subject_consumer,
+        stream=stream
+    )
+    await consumer.start()
 
 
 async def start_poll_dk_info(

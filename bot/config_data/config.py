@@ -19,11 +19,14 @@ class NatsStreamConfig:
     subject_admin_promocode_publisher: str
     subject_user_dk_publisher: str
     subject_user_promocode_publisher: str
+    subject_do_active_user_publisher: str
+    subject_do_inactive_user_publisher: str
 
     subject_admin_dk_consumer: str
     subject_admin_promocode_consumer: str
     subject_user_dk_consumer: str
     subject_user_promocode_consumer: str
+    subject_add_user_success_consumer: str
 
     stream: str
 
@@ -53,10 +56,13 @@ def load_config(path: str | None = None) -> Config:
             subject_admin_promocode_publisher=env('NATS_ADMIN_PROMOCODE_PUBLISHER'),
             subject_user_dk_publisher=env('NATS_USER_DK_PUBLISHER'),
             subject_user_promocode_publisher=env('NATS_USER_PROMOCODE_PUBLISHER'),
+            subject_do_active_user_publisher=env('NATS_DO_ACTIVE_USER_PUBLISHER'),
+            subject_do_inactive_user_publisher=env('NATS_DO_INACTIVE_USER_PUBLISHER'),
             subject_admin_dk_consumer=env('NATS_ADMIN_DK_CONSUMER'),
             subject_admin_promocode_consumer=env('NATS_ADMIN_PROMOCODE_CONSUMER'),
             subject_user_dk_consumer=env('NATS_USER_DK_CONSUMER'),
             subject_user_promocode_consumer=env('NATS_USER_PROMOCODE_CONSUMER'),
+            subject_add_user_success_consumer=env('NATS_ADD_USER_SUCCESS_CONSUMER'),
             stream=env('NATS_STREAM_CONSUMER')
         )
     )

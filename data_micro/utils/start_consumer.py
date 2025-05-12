@@ -1,6 +1,8 @@
 import logging
 
 from data_micro.services.delay_service.consumer import (
+    DoUserActiveConsumer,
+    DoUserInactiveConsumer,
     GetDkListConsumer,
     GetPromocodeListConsumer,
     GetDkInfoConsumer,
@@ -12,6 +14,41 @@ from nats.js.client import JetStreamContext
 
 
 logger = logging.getLogger(__name__)
+
+async def start_poll_user_active(
+        nc: Client,
+        js: JetStreamContext,
+        subject_consumer: str,
+        subject_publisher: str,
+        stream: str
+        ) -> None:
+    logger.debug(f'subject: {subject_consumer}, stream: {stream}')
+    consumer = DoUserActiveConsumer(
+        nc=nc,
+        js=js,
+        subject_consumer=subject_consumer,
+        subject_publisher=subject_publisher,
+        stream=stream
+    )
+    logger.info('Start poll user active consumer')
+    await consumer.start()
+
+
+async def start_poll_user_inactive(
+        nc: Client,
+        js: JetStreamContext,
+        subject_consumer: str,
+        stream: str
+        ) -> None:
+    logger.debug(f'subject: {subject_consumer}, stream: {stream}')
+    consumer = DoUserInactiveConsumer(
+        nc=nc,
+        js=js,
+        subject_consumer=subject_consumer,
+        stream=stream
+    )
+    logger.info('Start poll user inactive consumer')
+    await consumer.start()
 
 
 async def start_poll_dk_list(

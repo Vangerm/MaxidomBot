@@ -5,6 +5,20 @@ from nats.js.client import JetStreamContext
 
 # брокеры сообщений - паблишеры
 
+# Отправка приглашения пользователю
+# @retry
+async def sucsess_add_user_publisher(
+        js: JetStreamContext,
+        chat_id: int,
+        subject: str
+) -> None:
+
+    payload = json.dumps({
+        'chat_id': chat_id
+    }).encode()
+
+    await js.publish(subject=subject, payload=payload)
+
 # отправка списка всех дк
 async def push_dk_list_publisher(
         js: JetStreamContext,
