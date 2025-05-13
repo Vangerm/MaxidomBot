@@ -22,7 +22,7 @@ logging_config = {
             'level': 'INFO',
             'handlers': ['default']
         },
-        'other_handlers': {
+        'admin_handlers': {
             'level': 'INFO',
             'handlers': ['default']
         }
@@ -30,6 +30,6 @@ logging_config = {
     'root': {
         'formatter': 'default',
         'handlers': ['default'],
-        'level': 'DEBUG'
+        'level': 'INFO'
     }
 }
