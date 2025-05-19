@@ -8,7 +8,9 @@ from bot.services.delay_service.publisher import get_promocode_list_publisher
 from bot.filters.filters import IsAdmin
 
 
-admin_router = Router(IsAdmin())
+admin_router = Router()
+
+admin_router.message.filter(IsAdmin())
 
 
 @admin_router.message(Command(commands='getlog'))
