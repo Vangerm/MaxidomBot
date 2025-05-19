@@ -8,16 +8,16 @@ from bot.services.delay_service.publisher import get_promocode_list_publisher
 from bot.filters.filters import IsAdmin
 
 
-admin_router = Router()
+admin_router = Router(IsAdmin())
 
 
-@admin_router.message(Command(commands='getlog'), IsAdmin())
+@admin_router.message(Command(commands='getlog'))
 async def admin_get_log_command(message: Message, state: FSMContext):
     await state.clear()
     await message.answer_document(FSInputFile('bot/loger/logs.log'))
 
 
-@admin_router.message(Command(commands='getpromocodelist'), IsAdmin())
+@admin_router.message(Command(commands='getpromocodelist'))
 async def admin_get_promocode_list(
                                     message: Message,
                                     state: FSMContext,
@@ -30,7 +30,7 @@ async def admin_get_promocode_list(
                                         subject=subject_admin_promocode_publisher
     )
 
-@admin_router.message(Command(commands='getdklist'), IsAdmin())
+@admin_router.message(Command(commands='getdklist'))
 async def admin_get_promocode_list(
                                     message: Message,
                                     state: FSMContext,
@@ -44,6 +44,6 @@ async def admin_get_promocode_list(
     )
 
 
-@admin_router.message(Command(commands='news'), IsAdmin())
+@admin_router.message(Command(commands='news'))
 async def admin_news_command(message: Message):
     await message.answer(text='NEWS')
